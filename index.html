@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+  <script type="text/javascript">dayjs.extend(window.dayjs_plugin_relativeTime)</script>
+  <script src="http://localhost:8000/email/gauges.js"></script>
+  <script src="/assets/decode.js"></script>
 </head>
 <body>
   <div class="mdl-tabs mdl-js-tabs" style="max-width: 1200px; margin: auto;">
@@ -31,25 +36,31 @@
         <li>Rickon</li>
       </ul>
     </div>
+
     <div class="mdl-tabs__panel is-active" id="response" style="padding-bottom: 100px;">
       <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp" style="margin: 24px; padding: 12px;">
         <h3>Paste Inreach Data</h3>
         <form action="#">
           <div class="mdl-textfield mdl-js-textfield" style="width: 900px">
-            <textarea class="mdl-textfield__input" type="text" rows="3" id="encoded-input"></textarea>
+            <textarea class="mdl-textfield__input" type="text" rows="3" id="encoded-input">
+              uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==
+            </textarea>
             <label class="mdl-textfield__label" for="encoded-input">
               uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==
             </label>
           </div>
           <div>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            <button
+              class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+              onclick="parse(document.getElementById('encoded-input').value)"
+            >
               Load Data
             </button>
           </div>
         </form>
       </div>
 
-      <div style="margin: 24px;">
+      <div style="margin: 24px; display: none;" id="parsed-data-section">
         <h4>Weather Forecast</h4>
         <table class="mdl-data-table mdl-js-data-table">
           <thead>
@@ -61,26 +72,12 @@
               <th>Wind</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="mdl-data-table__cell--non-numeric">Thursday Nov 2</td>
-              <td class="mdl-data-table__cell--non-numeric"><img src="/assets/svg/05d.svg" height="36" alt="rain showers"></td>
-              <td>6.8° / 2.8°</td>
-              <td>0.1 mm</td>
-              <td>6.9 km/h</td>
-            </tr>
-            <tr>
-              <td class="mdl-data-table__cell--non-numeric">Friday Nov 3</td>
-              <td class="mdl-data-table__cell--non-numeric"><img src="/assets/svg/47.svg" height="36" alt="light sleet"></td>
-              <td>4.6° / -0.5°</td>
-              <td>0.8 mm</td>
-              <td>5.2 km/h</td>
-            </tr>
+          <tbody id="weather-forecast-tbody">
           </tbody>
         </table>
 
         <h4>Gauge Readings</h4>
-        <h5>BOM - Huon Rv at Tahune Bdge</h5>
+        <h5 id="gauge-name"></h5>
         <table class="mdl-data-table mdl-js-data-table">
           <thead>
             <tr>
@@ -88,40 +85,47 @@
               <th>Height</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="mdl-data-table__cell--non-numeric">
-                <div>Nov 2 4:52 PM</div>
-                <div>2 hours ago</div>
-              </td>
-              <td>1.12 m</td>
-            </tr>
-            <tr>
-              <td class="mdl-data-table__cell--non-numeric">
-                <div>Nov 2 12:37 PM</div>
-                <div>6 hours ago</div>
-              </td>
-              <td>1.05 m</td>
-            </tr>
+          <tbody id="gauge-readings-tbody">
           </tbody>
         </table>
 
         <div>
           <h4>Debug Info</h4>
-          <p>Gauge Id: 9494</p>
-
-          <p id="timeSesReceived">Request Received: 3 minutes ago</p>
-          <div class="mdl-tooltip" data-mdl-for="timeSesReceived">2023-10-31T11:10:42</div>
-
-          <p id="baseTime">Loaded Weather and Gauge Info: 2 minutes ago</p>
-          <div class="mdl-tooltip" data-mdl-for="baseTime">2023-11-01T06:01:30</div>
-
-          <p id="timeInreachSent">Response Sent: 2 minutes ago</p>
-          <div class="mdl-tooltip" data-mdl-for="timeInreachSent">2023-11-01T06:01:31</div>
+          <table class="mdl-data-table mdl-js-data-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Field</th>
+                <th class="mdl-data-table__cell--non-numeric">Value</th>
+                <th class="mdl-data-table__cell--non-numeric">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Gauge Id</td>
+                <td class="mdl-data-table__cell--non-numeric" id="gauge-id-debug"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Email Received</td>
+                <td class="mdl-data-table__cell--non-numeric" id="time-ses-received"></td>
+                <td class="mdl-data-table__cell--non-numeric" id="time-ses-received-abs"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Started Loading Data</td>
+                <td class="mdl-data-table__cell--non-numeric" id="base-time"></td>
+                <td class="mdl-data-table__cell--non-numeric" id="base-time-abs"></td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">Sent Response</td>
+                <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent"></td>
+                <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent-abs"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
+
   <footer class="mdl-mini-footer" style="padding: 12px;">
     <div class="mdl-mini-footer__left-section">
       <div class="mdl-logo">
