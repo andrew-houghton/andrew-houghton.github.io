@@ -13,131 +13,225 @@
   <script type="text/javascript">dayjs.extend(window.dayjs_plugin_relativeTime)</script>
   <script src="http://localhost:8000/email/gauges.js"></script>
   <script src="/assets/decode.js"></script>
+  <script src="/assets/search.js"></script>
 </head>
 <body>
-  <div class="mdl-tabs mdl-js-tabs" style="max-width: 1200px; margin: auto;">
-    <img
-      src="/assets/splash.png"
-      alt="Stylish kayaker nails the line. Photo: Flynn"
-      style="object-fit: contain; width: inherit; -webkit-mask-image: linear-gradient(black 60%, transparent 95%); mask-image: linear-gradient(black 60%, transparent 95%);"
-    >
-    <div class="mdl-tabs__tab-bar">
-        <a href="#request" class="mdl-tabs__tab">Request</a>
-        <a href="#response" class="mdl-tabs__tab is-active">Response</a>
-    </div>
-    <div class="mdl-tabs__panel" id="request">
-      <ul>
-        <li>Eddard</li>
-        <li>Catelyn</li>
-        <li>Robb</li>
-        <li>Sansa</li>
-        <li>Brandon</li>
-        <li>Arya</li>
-        <li>Rickon</li>
-      </ul>
-    </div>
+  <div class="mdl-layout mdl-js-layout">
+    <div class="mdl-tabs mdl-js-tabs mdl-layout__content" style="max-width: 1200px; margin: auto; flex: 1 0 auto;">
+      <img
+        src="/assets/splash.png"
+        alt="Stylish kayaker nails the line. Photo: Flynn"
+        style="object-fit: contain; width: inherit; -webkit-mask-image: linear-gradient(black 60%, transparent 95%); mask-image: linear-gradient(black 60%, transparent 95%);"
+      >
+      <div class="mdl-tabs__tab-bar">
+          <a href="#request" class="mdl-tabs__tab is-active">Request</a>
+          <a href="#response" class="mdl-tabs__tab">Response</a>
+      </div>
+      <div class="mdl-tabs__panel is-active" id="request" style="margin: 8px; padding-bottom: 20px;">
+        <h3>Gauge Selection</h3>
+        <div id="gauge-search">
+          <div style="display: flex; flex-wrap: wrap;">
+            <div style="width: 120px; padding-top: 4px;"><b>Filter State:</b></div>
+            <p>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-all">
+                <input type="radio" id="radio-all" class="mdl-radio__button" name="state" value="all" onclick="stateFilterSelected(this);" checked>
+                <span class="mdl-radio__label">All</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-tasmania">
+                <input type="radio" id="radio-tasmania" class="mdl-radio__button" name="state" value="tasmania" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">Tasmania</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-new-south-wales">
+                <input type="radio" id="radio-new-south-wales" class="mdl-radio__button" name="state" value="new-south-wales" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">New South Wales</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-northern-territory">
+                <input type="radio" id="radio-northern-territory" class="mdl-radio__button" name="state" value="northern-territory" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">Northern Territory</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-western-australia">
+                <input type="radio" id="radio-western-australia" class="mdl-radio__button" name="state" value="western-australia" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">Western Australia</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-queensland">
+                <input type="radio" id="radio-queensland" class="mdl-radio__button" name="state" value="queensland" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">Queensland</span>
+              </label>
+              <label style="margin-right: 8px;" class="mdl-radio mdl-js-radio" for="radio-victoria">
+                <input type="radio" id="radio-victoria" class="mdl-radio__button" name="state" value="victoria" onclick="stateFilterSelected(this);">
+                <span class="mdl-radio__label">Victoria</span>
+              </label>
+            </p>
+          </div>
 
-    <div class="mdl-tabs__panel is-active" id="response" style="padding-bottom: 100px;">
-      <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp" style="margin: 24px; padding: 12px;">
-        <h3>Paste Inreach Data</h3>
-        <form action="#">
-          <div class="mdl-textfield mdl-js-textfield" style="width: 900px">
-            <textarea class="mdl-textfield__input" type="text" rows="3" id="encoded-input">
-              uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==
-            </textarea>
-            <label class="mdl-textfield__label" for="encoded-input">
-              uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==
-            </label>
+          <div style="display: flex; flex-wrap: wrap;">
+            <div style="padding-top: 20px; width: 120px;"><b>Search:</b></div>
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input" type="text" id="search-text" onkeyup="searchChange()">
+              <label class="mdl-textfield__label" for="search-text">'BOM' or 'Cataract Gorge'</label>
+            </div>
           </div>
+
           <div>
-            <button
-              class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-              onclick="parse(document.getElementById('encoded-input').value)"
-            >
-              Load Data
-            </button>
+            <b>Choose a Gauge</b>
+            <div class="mdl-grid" id="gauge-grid">
+            </div>
+            <script type="text/javascript">setupGauges()</script>
           </div>
-        </form>
+        </div>
+        <div id="gauge-display" style="display: none; margin-bottom: 16px;">
+          <span style="margin-right: 20px;"><b>Selected Gauge Name:</b> <span id="selected-gauge-text"></span></span>
+          <button
+            class="mdl-button mdl-js-button mdl-button--raised"
+            onclick="deselectGauge()"
+          >
+            Clear Gauge
+          </button>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap;">
+          <div style="padding-top: 20px; width: 120px;"><b>Location:</b></div>
+          <div class="mdl-textfield mdl-js-textfield" style="margin-right: 16px;">
+            <input class="mdl-textfield__input" type="text" id="lat-lon-input">
+            <label class="mdl-textfield__label" for="lat-lon-input" id="lat-lon-input-label">-41.7324,146.5238</label>
+          </div>
+          <button
+            class="mdl-button mdl-js-button mdl-button--raised"
+            onclick="loadLocation()"
+          >
+            Use Current Location
+          </button>
+        </div>
+
+        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-1" style="margin-top: 8px; margin-bottom: 8px;">
+          <input type="checkbox" id="checkbox-1" class="mdl-checkbox__input">
+          <span class="mdl-checkbox__label">Plaintext Reply</span>
+        </label>
+
+        <div style="display: flex; justify-content: center; width: 100%;">
+          <div class="mdl-card mdl-shadow--4dp" style="width: 500px;">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">Request Text</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+              gauge: NO GAUGE SET location: NO LOCATION SET client: 1
+            </div>
+
+            <div class="mdl-card__actions mdl-card--border">
+              <span class="mdl-chip" style="background: #FFDDDB;">
+                <span class="mdl-chip__text">Invalid</span>
+              </span>
+            </div>
+
+            <div class="mdl-card__actions mdl-card--border">
+              <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
+                Copy Request Text
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div style="margin: 24px; display: none;" id="parsed-data-section">
-        <h4>Weather Forecast</h4>
-        <table class="mdl-data-table mdl-js-data-table">
-          <thead>
-            <tr>
-              <th class="mdl-data-table__cell--non-numeric">Date</th>
-              <th class="mdl-data-table__cell--non-numeric"></th>
-              <th>Max / Min</th>
-              <th>Precip.</th>
-              <th>Wind</th>
-            </tr>
-          </thead>
-          <tbody id="weather-forecast-tbody">
-          </tbody>
-        </table>
+      <div class="mdl-tabs__panel" id="response" style="padding-bottom: 20px; margin: 8px;">
+        <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp" style="padding: 12px;">
+          <h3>Paste Inreach Data</h3>
+          <form action="#">
+            <div class="mdl-textfield mdl-js-textfield" style="width: 900px">
+              <textarea class="mdl-textfield__input" type="text" rows="3" id="encoded-input"></textarea>
+              <label class="mdl-textfield__label" for="encoded-input">
+                uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==
+              </label>
+            </div>
+            <div>
+              <button
+                class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                onclick="parse(document.getElementById('encoded-input').value)"
+              >
+                Load Data
+              </button>
+            </div>
+          </form>
+        </div>
 
-        <h4>Gauge Readings</h4>
-        <h5 id="gauge-name"></h5>
-        <table class="mdl-data-table mdl-js-data-table">
-          <thead>
-            <tr>
-              <th class="mdl-data-table__cell--non-numeric">Time</th>
-              <th>Height</th>
-            </tr>
-          </thead>
-          <tbody id="gauge-readings-tbody">
-          </tbody>
-        </table>
-
-        <div>
-          <h4>Debug Info</h4>
+        <div style="margin: 24px; display: none;" id="parsed-data-section">
+          <h4>Weather Forecast</h4>
           <table class="mdl-data-table mdl-js-data-table">
             <thead>
               <tr>
-                <th class="mdl-data-table__cell--non-numeric">Field</th>
-                <th class="mdl-data-table__cell--non-numeric">Value</th>
                 <th class="mdl-data-table__cell--non-numeric">Date</th>
+                <th class="mdl-data-table__cell--non-numeric"></th>
+                <th>Max / Min</th>
+                <th>Precip.</th>
+                <th>Wind</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="mdl-data-table__cell--non-numeric">Gauge Id</td>
-                <td class="mdl-data-table__cell--non-numeric" id="gauge-id-debug"></td>
-              </tr>
-              <tr>
-                <td class="mdl-data-table__cell--non-numeric">Email Received</td>
-                <td class="mdl-data-table__cell--non-numeric" id="time-ses-received"></td>
-                <td class="mdl-data-table__cell--non-numeric" id="time-ses-received-abs"></td>
-              </tr>
-              <tr>
-                <td class="mdl-data-table__cell--non-numeric">Started Loading Data</td>
-                <td class="mdl-data-table__cell--non-numeric" id="base-time"></td>
-                <td class="mdl-data-table__cell--non-numeric" id="base-time-abs"></td>
-              </tr>
-              <tr>
-                <td class="mdl-data-table__cell--non-numeric">Sent Response</td>
-                <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent"></td>
-                <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent-abs"></td>
-              </tr>
+            <tbody id="weather-forecast-tbody">
             </tbody>
           </table>
+
+          <h4>Gauge Readings</h4>
+          <h5 id="gauge-name"></h5>
+          <table class="mdl-data-table mdl-js-data-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Time</th>
+                <th>Height</th>
+              </tr>
+            </thead>
+            <tbody id="gauge-readings-tbody">
+            </tbody>
+          </table>
+
+          <div>
+            <h4>Debug Info</h4>
+            <table class="mdl-data-table mdl-js-data-table">
+              <thead>
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric">Field</th>
+                  <th class="mdl-data-table__cell--non-numeric">Value</th>
+                  <th class="mdl-data-table__cell--non-numeric">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric">Gauge Id</td>
+                  <td class="mdl-data-table__cell--non-numeric" id="gauge-id-debug"></td>
+                </tr>
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric">Email Received</td>
+                  <td class="mdl-data-table__cell--non-numeric" id="time-ses-received"></td>
+                  <td class="mdl-data-table__cell--non-numeric" id="time-ses-received-abs"></td>
+                </tr>
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric">Started Loading Data</td>
+                  <td class="mdl-data-table__cell--non-numeric" id="base-time"></td>
+                  <td class="mdl-data-table__cell--non-numeric" id="base-time-abs"></td>
+                </tr>
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric">Sent Response</td>
+                  <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent"></td>
+                  <td class="mdl-data-table__cell--non-numeric" id="time-inreach-sent-abs"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <footer class="mdl-mini-footer" style="padding: 12px;">
-    <div class="mdl-mini-footer__left-section">
-      <div class="mdl-logo">
-        Site by Andrew Houghton
+    <footer class="mdl-mini-footer" style="padding: 12px; flex: 0 0 auto;">
+      <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo">
+          Site by Andrew Houghton
+        </div>
+        <ul class="mdl-mini-footer__link-list">
+          <a href=""></a>
+          <li><a href="https://wikiriver.com/">WikiRiver</a></li>
+          <li><a href="https://www.yr.no/en">Yr.no Weather</a></li>
+          <li><a href="https://nrkno.github.io/yr-weather-symbols/">Icon Source</a></li>
+        </ul>
       </div>
-      <ul class="mdl-mini-footer__link-list">
-        <a href=""></a>
-        <li><a href="https://wikiriver.com/">WikiRiver</a></li>
-        <li><a href="https://www.yr.no/en">Yr.no Weather</a></li>
-        <li><a href="https://nrkno.github.io/yr-weather-symbols/">Icon Source</a></li>
-      </ul>
-    </div>
-  </footer>
+    </footer>
+  </div>
 </body>
 </html>
