@@ -27,10 +27,32 @@
         style="object-fit: contain; width: inherit; -webkit-mask-image: linear-gradient(black 60%, transparent 95%); mask-image: linear-gradient(black 60%, transparent 95%);"
       >
       <div class="mdl-tabs__tab-bar">
-          <a href="#request" class="mdl-tabs__tab is-active">Request</a>
+          <a href="#instructions" class="mdl-tabs__tab is-active">Instructions</a>
+          <a href="#request" class="mdl-tabs__tab">Request</a>
           <a href="#response" class="mdl-tabs__tab">Response</a>
       </div>
       <div class="mdl-tabs__panel is-active" id="request" style="margin: 8px; padding-bottom: 20px;">
+        <h3>WikiRiver via Satellite</h3>
+        <p>
+          This tool allows users to access gauge readings from WikiRiver and weather forecasts from <a href="https://www.yr.no/en">yr.no</a>.
+          Users use an <a href="https://discover.garmin.com/en-AU/inreach/personal/">InReach Satellite Messenger</a> to send an email to WikiRiver. This email is recieved by the server, which then loads the data and sends a reply to the InReach as a response message. This allows users to get up to date info in remote areas where there is no mobile phone coverage.
+        </p>
+        <h4>Instructions</h4>
+        <ol>
+          <li>Install this website as a PWA. On Chrome Android this means clicking the three dots in the top right to open the menu and clicking the "Install App" option. This allows the website to be used offline.</li>
+          <li>Open the Request tab</li>
+          <li>Select a gauge. Set a location or use the button for current location.</li>
+          <li>Copy the request string eg <b>gauge:9585 location:-42.8543,147.2934 client:1</b></li>
+          <li>On your phone add a contact with the email "ir@wikiriver.com"</li>
+          <li>Open the earthmate app use your inreach to send a message to that email. The message should be the text you copied earlier. eg. gauge:9585 location:-42.8543,147.2934 client:1</li>
+          <li>Wait for a reply. The reply should be sent within 2 minutes of the message sending, but the inreach network is often slow to deliver the message and take up to 20+ mins.</li>
+          <li>Copy the text in the response (I needed to use the "forward" feature to do this.). If the message starts with a leading slash make sure that is also copied. The text will look like <b>uulBZRYlAgQBACwEBARFAAQIADYEAAQ0AAQVABYE4wMrACUKABME4AMdACUpXI8/VQFmZoY/XwCy4EBlu+lBZQ==</b></li>
+          <li>Open this page again and go to the Response tab.</li>
+          <li>Paste the text received and click Load Data.</li>
+          <li>scroll down to review the gauge data and weather report.</li>
+        </ol>
+      </div>
+      <div class="mdl-tabs__panel" id="request" style="margin: 8px; padding-bottom: 20px;">
         <h3>Gauge Selection</h3>
         <div id="gauge-search">
           <div style="display: flex; flex-wrap: wrap;">
@@ -87,6 +109,7 @@
           <button
             class="mdl-button mdl-js-button mdl-button--raised"
             onclick="deselectGauge()"
+            style="margin-top: 8px;"
           >
             Clear Gauge
           </button>
@@ -243,3 +266,13 @@
   </script>
 </body>
 </html>
+<style>
+@media only screen and (max-width: 480px) {
+  /* horizontal scrollbar for tables if mobile screen */
+  table {
+    overflow-x: auto;
+    display: block;
+    overflow: scroll;
+  }
+}
+</style>
