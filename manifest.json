@@ -1,0 +1,14 @@
+{
+  "name": "WikiRiver via Satellite",
+  "icons": [
+    {
+      "src": "/assets/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "theme_color": "#8acfd6",
+  "background_color": "#0174BA",
+  "display": "standalone"
+}
