@@ -182,7 +182,7 @@ function render(output) {
       // Wind
       var td = tr.insertCell();
       td.appendChild(
-        document.createTextNode(`${output.weatherItems[i].wind} km/h`),
+        document.createTextNode(`${output.weatherItems[i].wind} m/s`),
       );
     }
   }
