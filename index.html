@@ -4,13 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WikiRiver via Satellite</title>
-
   <link rel="manifest" href="/manifest.json">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+  <link rel="stylesheet" href="/resources/icon?family=Material+Icons">
+  <link rel="stylesheet" href="/resources/material.indigo-pink.min.css">
+  <script defer src="/resources/material.min.js"></script>
+  <script src="/resources/dayjs.min.js"></script>
+  <script src="/resources/relativeTime.js"></script>
   <script type="text/javascript">dayjs.extend(window.dayjs_plugin_relativeTime)</script>
   <script src="https://api.wikiriver.com/email/gauges.js"></script>
   <script src="/assets/decode.js"></script>
@@ -261,7 +260,7 @@
   // Check to make sure the browser supports service workers
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register('/sw.js')
       .then(() => console.log('Service worker registered'))
       .catch(err => console.log('Service worker registration failed: ' + err));
   }
