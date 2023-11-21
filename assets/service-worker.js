@@ -1,11 +1,5 @@
-/**
- * The cache name should change every time you want to "cache bust"
- * i.e. if you want to change these files
- * in a real-world app this would be handled by your build system
- * e.g. Vite or Next.js would hash the files so the name is unique based on content
- * (style-XYZ123.css etc)
- */
-const CACHE_NAME = "mpwa-cache-v1";
+importScripts('./version.js');
+const CACHE_NAME = "mpwa-cache-v" + clientVersion;
 const urlsToCache = [
   "/",
   "/assets/decode.js",

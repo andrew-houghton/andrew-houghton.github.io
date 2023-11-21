@@ -71,7 +71,7 @@ function updateRequestText() {
   var requestTextDisplay = document.getElementById("request-text");
   requestTextDisplay.textContent = `gauge:${
     selectedGauge || "NO GAUGE"
-  } location:${locationText || "NO LOCATION"} client:1${
+  } location:${locationText || "NO LOCATION"} client:${clientVersion}${
     plaintextReply ? " text" : ""
   }`;
 

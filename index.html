@@ -38,7 +38,7 @@
           Users use an <a href="https://discover.garmin.com/en-AU/inreach/personal/">InReach Satellite Messenger</a> to send an email to WikiRiver. This email is recieved by the server, which then loads the data and sends a reply to the InReach as a response message. This allows users to get up to date info in remote areas where there is no mobile phone coverage.
         </p>
         <h4>Instructions</h4>
-        <ol>
+        <ol style="word-wrap: break-word;">
           <li>Install this website as a PWA. On Chrome Android this means clicking the three dots in the top right to open the menu and clicking the "Install App" option. This allows the website to be used offline.</li>
           <li>Open the Request tab</li>
           <li>Select a gauge. Set a location or use the button for current location.</li>
@@ -140,7 +140,7 @@
               <h2 class="mdl-card__title-text">Request Text</h2>
             </div>
             <div class="mdl-card__supporting-text" id='request-text'>
-              gauge: NO GAUGE SET location: NO LOCATION SET client: 1
+              gauge: NO GAUGE SET location: NO LOCATION SET client:1
             </div>
 
             <div class="mdl-card__actions mdl-card--border">
@@ -252,9 +252,11 @@
           <li><a href="https://www.yr.no/en">Yr.no Weather</a></li>
           <li><a href="https://nrkno.github.io/yr-weather-symbols/">Icon Source</a></li>
         </ul>
+        <div id="client-version-footer"></div>
       </div>
     </footer>
   </div>
+  <script src="/assets/version.js"></script>
   <script>
   // Check to make sure the browser supports service workers
   if ('serviceWorker' in navigator) {
@@ -263,6 +265,7 @@
       .then(() => console.log('Service worker registered'))
       .catch(err => console.log('Service worker registration failed: ' + err));
   }
+  document.getElementById("client-version-footer").textContent = `Client Verion: ${clientVersion}`
   </script>
 </body>
 </html>
