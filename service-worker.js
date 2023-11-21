@@ -1,4 +1,4 @@
-// 1
+// 2
 importScripts('./version.js');
 const CACHE_NAME = "mpwa-cache-v" + clientVersion;
 const urlsToCache = [
