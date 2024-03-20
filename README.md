@@ -25,3 +25,10 @@ Parser:
     When run it fills the area below the button with formatted data.
 
 CSS docs https://getmdl.io/components/index.html
+
+## Build
+
+```
+rm workbox-23958734.js workbox-23958734.js.map
+npx workbox generateSW workbox-config.js
+```
